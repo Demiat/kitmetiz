@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}
+  Приветствуем!
+{% endblock %}
+{% block content %}
+  <h1>Хай</h1>
+  {% comment %} {% for post in page_obj %}
+    <article class="mb-5">
+      {% include "includes/post_card.html" %}
+    </article>
+  {% endfor %} {% endcomment %}
+  {% comment %} {% include "includes/paginator.html" %} {% endcomment %}
+{% endblock %}
