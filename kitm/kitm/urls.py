@@ -7,7 +7,8 @@ handler500 = 'pages.views.server_error'
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('auth/', include('users.urls', namespace='users')),
+    path('auth/', include('django.contrib.auth.urls')),
+    path('users/', include('users.urls', namespace='users')),
     path('', include('welcome.urls', namespace='welcome')),
     path('pages/', include('pages.urls', namespace='pages')),
 ]

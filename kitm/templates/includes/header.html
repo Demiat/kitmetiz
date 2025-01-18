@@ -1,6 +1,11 @@
 {% load static %}
+<style>
+  .nav-h {
+      background-size: contain;
+  }
+</style>
 <header>
-  <nav class="navbar navbar-light" style="background-image: url('{% static 'img/verh1400.png' %}')">
+  <nav class="navbar navbar-light nav-h" style="background-image: url('{% static 'img/verh1400.png' %}')">
     <div class="container">
       <a class="navbar-brand" href="{% url 'welcome:index' %}">
         <img src="{% static 'img/logo_kit.png' %}" class="d-inline-block align-top" alt="КИТ-Метиз">
@@ -8,28 +13,28 @@
       {% with request.resolver_match.view_name as view_name %}
         <ul class="nav  nav-pills">
           <li class="nav-item">
-            <a class="nav-link {% if view_name == 'pages:about' %} text-white {% endif %}" href="{% url 'pages:about' %}">
+            <a class="nav-link {% if view_name == 'pages:about' %} text-success {% endif %}" href="{% url 'pages:about' %}">
               О проекте
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link {% if view_name == 'pages:contact' %} text-white {% endif %}" href="{% url 'pages:contact' %}">
+            <a class="nav-link {% if view_name == 'pages:contact' %} text-success {% endif %}" href="{% url 'pages:contact' %}">
               Информация
             </a>
           </li>
           {% if user.is_authenticated %}
             <div class="btn-group" role="group" aria-label="Basic outlined example">
-              {% comment %} <button type="button" class="btn btn-outline-primary"><a class="text-decoration-none text-reset"
-                  href="{% url 'blog:create_post' %}">Написать пост</a></button> {% endcomment %}
               <button type="button" class="btn btn-outline-primary"><a class="text-decoration-none text-reset"
                   href="{% url 'users:profile' user.username %}">{{ user.username }}</a></button>
-              <button type="button" class="btn btn-outline-primary"><a class="text-decoration-none text-reset"
-                  href="{% url 'users:logout' %}">Выйти</a></button>
+              <form action="{% url 'logout' %}" method="post">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-outline-primary">Выйти</button>
+              </form>
             </div>
           {% else %}
             <div class="btn-group" role="group" aria-label="Basic outlined example">
               <button type="button" class="btn btn-outline-primary"><a class="text-decoration-none text-reset"
-                  href="{% url 'users:login' %}">Войти</a></button>
+                  href="{% url 'login' %}">Войти</a></button>
               <button type="button" class="btn btn-outline-primary"><a class="text-decoration-none text-reset"
                   href="{% url 'users:registration' %}">Регистрация</a></button>
             </div>
