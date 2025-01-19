@@ -11,6 +11,9 @@ User = get_user_model()
 
 
 class RegisterUserView(CreateView):
+    """Регистрация пользователя"""
+
+    model = User
     template_name = 'registration/registration_form.html'
     form_class = CustomUserCreationForm
     success_url = reverse_lazy('login')
@@ -31,24 +34,17 @@ class RegisterUserView(CreateView):
         return response
 
 
-def user_profile(request, username):
-    pass
-    # """Управляет профилем пользователя"""
-    # profile = get_object_or_404(User, username=username)
-    # posts_of_user = profile.posts.select_related(
-    #     'category', 'location').annotate(
-    #         comment_count=Count('comments')
-    # ).order_by('-pub_date')
-    # context = {
-    #     'profile': profile,
-    #     'page_obj': pagination(posts_of_user, request.GET.get('page'))
-    # }
-    # return render(request, 'blog/profile.html', context)
-
-
 class UserProfile(LoginRequiredMixin, TemplateView):
+    """Просмотр профиля пользователя"""
+
     model = User
     template_name = 'users/profile.html'
+
+    def get_context_data(self, **kwargs):
+        """Передает в шаблон информацию"""
+        context = super().get_context_data(**kwargs)
+        context['profile'] = self.request.user
+        return context
 
 
 class EditProfile(LoginRequiredMixin, UpdateView):

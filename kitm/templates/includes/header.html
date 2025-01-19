@@ -1,46 +1,69 @@
 {% load static %}
+<script src="{% static 'js/bootstrap.bundle.min.js' %}" defer></script>
 <style>
-  .nav-h {
-      background-size: contain;
-  }
+  .nav-h {background-size: contain;}
+  .nav-link:hover {color: red;}
 </style>
 <header>
-  <nav class="navbar navbar-light nav-h" style="background-image: url('{% static 'img/verh1400.png' %}')">
-    <div class="container">
-      <a class="navbar-brand" href="{% url 'welcome:index' %}">
-        <img src="{% static 'img/logo_kit.png' %}" class="d-inline-block align-top" alt="КИТ-Метиз">
-      </a>
-      {% with request.resolver_match.view_name as view_name %}
-        <ul class="nav  nav-pills">
-          <li class="nav-item">
-            <a class="nav-link {% if view_name == 'pages:about' %} text-success {% endif %}" href="{% url 'pages:about' %}">
-              О проекте
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link {% if view_name == 'pages:contact' %} text-success {% endif %}" href="{% url 'pages:contact' %}">
-              Информация
-            </a>
-          </li>
-          {% if user.is_authenticated %}
-            <div class="btn-group" role="group" aria-label="Basic outlined example">
-              <button type="button" class="btn btn-outline-primary"><a class="text-decoration-none text-reset"
-                  href="{% url 'users:profile' user.username %}">{{ user.username }}</a></button>
-              <form action="{% url 'logout' %}" method="post">
-                {% csrf_token %}
-                <button type="submit" class="btn btn-outline-primary">Выйти</button>
-              </form>
-            </div>
-          {% else %}
-            <div class="btn-group" role="group" aria-label="Basic outlined example">
-              <button type="button" class="btn btn-outline-primary"><a class="text-decoration-none text-reset"
-                  href="{% url 'login' %}">Войти</a></button>
-              <button type="button" class="btn btn-outline-primary"><a class="text-decoration-none text-reset"
-                  href="{% url 'users:registration' %}">Регистрация</a></button>
-            </div>
-          {% endif %}
-        </ul>
-      {% endwith %}
-    </div>
-  </nav>
+  <div class="container">
+    <nav class="navbar nav-h" style="background-image: url('{% static 'img/verh1400.png' %}')">
+    <a class="navbar-brand mx-auto" href="{% url 'welcome:index' %}">
+      <img src="{% static 'img/logo_kit.png' %}" class="d-inline-block align-top" alt="КИТ-Метиз">
+    </a>
+    {% with request.resolver_match.view_name as view_name %}
+      <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
+        <div class="offcanvas-header">
+          <h5 class="offcanvas-title" id="offcanvasNavbarLabel">МЕНЮ</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+          <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
+            <li class="nav-item">
+              <a class="nav-link" aria-current="page" href="{% url 'welcome:index' %}">Домой</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link {% if view_name == 'pages:about' %} text-primary {% endif %}" href="{% url 'pages:about' %}">
+                О проекте
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link {% if view_name == 'pages:contact' %} text-primary {% endif %}" href="{% url 'pages:contact' %}">
+                Информация
+              </a>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Пользователь
+              </a>
+              <ul class="dropdown-menu border-0">
+                {% if user.is_authenticated %}
+                  <li><a class="dropdown-item ps-0" href="{% url 'users:profile' user.username %}">{{ user.username }}</a></li>
+                  <li>
+                    <form action="{% url 'logout' %}" method="post">
+                      {% csrf_token %}
+                      <button type="submit" class="btn btn-sm btn-outline-secondary">Выйти</button>
+                    </form>
+                  </li>
+                {% else %}
+                  <div class="btn-group" role="group" aria-label="Basic outlined example">
+                    <button type="button" class="btn btn-sm btn-outline-primary"><a class="text-decoration-none text-reset"
+                      href="{% url 'login' %}">Войти</a></button>
+                    <button type="button" class="btn btn-sm btn-outline-primary"><a class="text-decoration-none text-reset"
+                      href="{% url 'users:registration' %}">Регистрация</a></button>
+                  </div>
+                {% endif %}
+              </ul>
+            </li>
+          </ul>
+          <form class="d-flex mt-3" role="search">
+            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+            <button class="btn btn-outline-success" type="submit">Search</button>
+          </form>
+        </div>
+      </div>
+    {% endwith %}
+  </div>
 </header>
