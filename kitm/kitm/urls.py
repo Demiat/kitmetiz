@@ -6,9 +6,8 @@ handler404 = 'pages.views.page_not_found'
 handler500 = 'pages.views.server_error'
 
 urlpatterns = [
+    path('auth/', include('users.urls', namespace='users')),
     path('admin/', admin.site.urls),
-    path('auth/', include('django.contrib.auth.urls')),
-    path('users/', include('users.urls', namespace='users')),
     path('', include('welcome.urls', namespace='welcome')),
     path('pages/', include('pages.urls', namespace='pages')),
 ]

@@ -1,3 +1,5 @@
+import sys
+
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -74,14 +76,14 @@ WSGI_APPLICATION = 'kitm.wsgi.application'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
 DATABASES = {
-    'postgre_db': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'kitdb',
-        'USER': 'postgres',
-        'PASSWORD': 'pass',
-        'HOST': '127.0.0.1',
-        'PORT': '5432',
-    },
+    # 'postgre_db': {
+    #     'ENGINE': 'django.db.backends.postgresql_psycopg2',
+    #     'NAME': 'kitdb',
+    #     'USER': 'postgres',
+    #     'PASSWORD': 'pass',
+    #     'HOST': '127.0.0.1',
+    #     'PORT': '5432',
+    # },
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
