@@ -1,0 +1,17 @@
+{% load static %}
+<div class="card" style="width: 18rem;">
+    <img src="{% static 'object_list.image.url' %}" class="card-img-top" alt="{{ object_list.name }}">
+    <div class="card-body">
+      <h5 class="card-title">{{ object_list.name }}</h5>
+      <p class="card-text">{{ object_list.text }}</p>
+    </div>
+    <ul class="list-group list-group-flush">
+      <li class="list-group-item">{{ object_list.price }} руб. В наличии: {{ object_list.quantity }}, {{ object_list.unit_of_measure }}</li>
+      <li class="list-group-item">Арт.: {{ object_list.article }}</li>
+      <li class="list-group-item">{{ object_list.category }}</li>
+    </ul>
+    <div class="card-body">
+      <a href="#" class="card-link">Card link</a>
+      <a href="#" class="card-link">Another link</a>
+    </div>
+  </div>

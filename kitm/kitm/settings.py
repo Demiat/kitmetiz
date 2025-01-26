@@ -148,3 +148,6 @@ EMAIL_FILE_PATH = BASE_DIR / 'sent_emails'
 AUTHENTICATION_BACKENDS = [
     'users.EmailAuthBackend.EmailAuthBackend',
 ]
+
+MEDIA_ROOT = BASE_DIR / 'smedia'
+MEDIA_URL = '/path/'
