@@ -31,4 +31,4 @@ class Nomenclature(models.Model):
         blank=True)
 
     class Meta:
-        orderin = ('category',)
+        ordering = ('category',)

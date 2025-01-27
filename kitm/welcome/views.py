@@ -1,6 +1,6 @@
 from django.views.generic import ListView
 
-from .core.models import Nomenclature
+from core.models import Nomenclature
 
 
 class Welcome(ListView):

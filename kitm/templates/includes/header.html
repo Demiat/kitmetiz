@@ -42,7 +42,7 @@
                 {% if user.is_authenticated %}
                   <li><a class="dropdown-item ps-0" href="{% url 'users:profile' user.username %}">{{ user.username }}</a></li>
                   <li>
-                    <form action="{% url 'logout' %}" method="post">
+                    <form action="{% url 'users:logout' %}" method="post">
                       {% csrf_token %}
                       <button type="submit" class="btn btn-sm btn-outline-secondary">Выйти</button>
                     </form>
@@ -55,6 +55,12 @@
                       href="{% url 'users:registration' %}">Регистрация</a></button>
                   </div>
                 {% endif %}
+                <HR>
+                <li class="nav-item">
+                  <a class="nav-link" href="/admin/">
+                    Админка
+                  </a>
+                </li>
               </ul>
             </li>
           </ul>
