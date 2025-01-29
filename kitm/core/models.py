@@ -1,4 +1,5 @@
 from django.db import models
+from django.conf import settings
 
 from . import constants
 
@@ -7,7 +8,7 @@ class Nomenclature(models.Model):
     name = models.CharField(
         'Наименование',
         max_length=constants.MAX_CHARFIELD,
-        editable=False)
+    )
     UID = models.CharField(
         max_length=36,
         unique=True,
@@ -18,7 +19,7 @@ class Nomenclature(models.Model):
     article = models.CharField(
         'Артикул',
         max_length=constants.MIN_CHARFIELD,
-        editable=False)
+    )
     unit_of_measure = models.CharField(
         'Единица Измерения',
         max_length=constants.MIN_CHARFIELD
@@ -27,7 +28,7 @@ class Nomenclature(models.Model):
     on_home = models.BooleanField('На Главной', default=False)
     image = models.ImageField(
         'Изображение',
-        upload_to='smedia/nomenclature/',
+        upload_to=settings.MEDIA_NOM,
         blank=True)
 
     class Meta:

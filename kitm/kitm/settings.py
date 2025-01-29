@@ -1,5 +1,3 @@
-import sys
-
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -151,4 +149,5 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 MEDIA_ROOT = BASE_DIR / 'smedia'
+MEDIA_NOM = BASE_DIR / 'smedia/nomenclature/'
 MEDIA_URL = '/path/'

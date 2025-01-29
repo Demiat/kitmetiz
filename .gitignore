@@ -1,5 +1,6 @@
 static/
 sent_emails/
+smedia
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
@@ -131,6 +132,7 @@ celerybeat.pid
 *.sage.py
 
 # Environments
+.vscode
 .env
 .venv
 env/
