@@ -1,16 +1,14 @@
 from pathlib import Path
+import os
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
+from dotenv import load_dotenv
+
+load_dotenv()
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+SECRET_KEY = os.getenv('SECRET_KEY', 'Нет секретного ключа!')
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-*e*+(_v2%auynn*l50_l0am=(t!!#@u%_dls73f5(c=o5&vh$='
-
-# SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
 ALLOWED_HOSTS = []
@@ -19,8 +17,6 @@ INTERNAL_IPS = [
     '127.0.0.1',
 ]
 
-# Application definition
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -28,13 +24,14 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'debug_toolbar',
+    'django_bootstrap5',
+    'django_cleanup.apps.CleanupConfig',
+    'django_apscheduler',
     'users.apps.UsersConfig',
     'pages.apps.PagesConfig',
     'welcome.apps.WelcomeConfig',
     'core.apps.CoreConfig',
-    'debug_toolbar',
-    'django_bootstrap5',
-    'django_cleanup.apps.CleanupConfig',
 ]
 
 MIDDLEWARE = [
@@ -69,10 +66,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'kitm.wsgi.application'
 
-
-# Database
-# https://docs.djangoproject.com/en/5.1/ref/settings/#databases
-
 DATABASES = {
     # 'postgre_db': {
     #     'ENGINE': 'django.db.backends.postgresql_psycopg2',
@@ -87,10 +80,6 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
-
-
-# Password validation
-# https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -107,10 +96,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
-# Internationalization
-# https://docs.djangoproject.com/en/5.1/topics/i18n/
-
 LANGUAGE_CODE = 'Ru-ru'
 
 TIME_ZONE = 'UTC'
@@ -119,18 +104,11 @@ USE_I18N = True
 
 USE_TZ = True
 
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/5.1/howto/static-files/
-
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [
     BASE_DIR / 'static',
 ]
 CORE_FIXTURES = BASE_DIR / 'core/fixtures'
-
-# Default primary key field type
-# https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 

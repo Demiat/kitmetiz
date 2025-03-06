@@ -13,6 +13,8 @@ from .conftest import (
 
 pytestmark = mark.django_db
 
+ANON_TO_PAGE = 'Доступ Анонима к странице {url} невозможен'
+
 
 @mark.parametrize(
     'revers_name',
@@ -24,24 +26,24 @@ pytestmark = mark.django_db
         (reverse('users:login')),
     )
 )
-def test_anonim_to_home_page(client, revers_name):
-    """Доступ Анонима к общим страницам"""
+def test_anonim_to_pages(client, revers_name):
+    """Доступ Анонима к общим страницам."""
     assert client.get(revers_name).status_code == HTTPStatus.OK, (
-        'Доступ Анонима к странице {} невозможен'.format(revers_name)
+        ANON_TO_PAGE.format(url=revers_name)
     )
 
 
 def test_anonim_redirect_to_login(client, profile_url):
-    """Аноним перенаправляется на страницу логина"""
+    """Аноним перенаправляется на страницу логина."""
     responce = client.get(profile_url, follow=False)
     assertRedirects(
         responce,
         f'{reverse('users:login')}?next={profile_url}',
-        fetch_redirect_response=False
+        fetch_redirect_response=False  # без проверки перенаправления
     )
 
 
 def user_can_view_pages(author_client, profile_url):
-    """Авторизованный пользователь может просматривать страницы"""
+    """Авторизованный пользователь может просматривать страницы."""
     responce = author_client.get(profile_url)
     assert responce.status_code == HTTPStatus.OK

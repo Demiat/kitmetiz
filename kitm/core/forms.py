@@ -4,7 +4,7 @@ from .models import Nomenclature
 
 
 class NomenclatureForm(forms.ModelForm):
-    """Форма Номенклатуры"""
+    """Форма Номенклатуры."""
 
     class Meta:
         model = Nomenclature

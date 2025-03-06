@@ -10,19 +10,19 @@ REGISTRATION_PAGE = reverse('users:registration')
 
 @fixture
 def author(django_user_model):
-    """Создает автора"""
+    """Создает автора."""
     return django_user_model.objects.create(username='ivan_author')
 
 
 @fixture
 def profile_url(author):
-    """Возвращает ссылку на профиль автора"""
+    """Возвращает ссылку на профиль автора."""
     return reverse('users:profile', kwargs={'username': author.username})
 
 
 @fixture
 def author_client(author):
-    """Логинит автора"""
+    """Логинит автора."""
     client = Client()
     client.force_login(author)
     return client
