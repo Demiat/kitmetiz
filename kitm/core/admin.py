@@ -1,15 +1,13 @@
-import json
-import base64
-import os
+import pickle
 
 from django.contrib import admin
 from django.template.response import TemplateResponse
-from django.conf import settings
 from django_apscheduler.models import DjangoJob, DjangoJobExecution
+from django.utils.encoding import force_str
 
-from . models import Nomenclature
+from .funcs import process_exchange_1C
 
-JSON_FIXTURE = '123.json'
+DESERIALIZED_ERROR = 'Ошибка десериализации данных: {e}'
 
 
 class CustomAdminSite(admin.AdminSite):
@@ -29,43 +27,10 @@ class CustomAdminSite(admin.AdminSite):
         ]
         return my_urls + urls
 
-    @staticmethod
-    def process_exchange_1C():
-        fixture_path = os.path.join(settings.CORE_FIXTURES, JSON_FIXTURE)
-        with open(f'{fixture_path}', 'r', encoding='utf-8') as file:
-            parsed_data = json.load(file)
-        # Обходим структуру
-        for uid in parsed_data:
-            product = parsed_data[uid]
-            if product[6] != 'Нет Изображения':
-                image_base64_bytes = product[6].encode('ascii')
-                decoded_image = base64.b64decode(image_base64_bytes)
-                # Сохраняем полученное изображение
-                img_path = os.path.join(
-                    settings.MEDIA_NOM,
-                    f'{uid}.jpg'
-                )
-                with open(img_path, 'wb') as output_file:
-                    output_file.write(decoded_image)
-            Nomenclature.objects.update_or_create(
-                UID=uid,
-                defaults=dict(
-                    name=product[0],
-                    quantity=product[1],
-                    price=product[2],
-                    article=product[3],
-                    unit_of_measure=product[4],
-                    category=product[5],
-                    image=img_path,
-                )
-            )
-            img_path = ''
-        return f'Обработано {len(parsed_data)} записей!'
-
     def exchange_1С(self, request):
         message = None
         if request.method == 'POST':
-            message = self.process_exchange_1C()
+            message = process_exchange_1C()
         # Наследуем контекст от родительского класса AdminSite
         context = self.each_context(request)
         context.update({
@@ -77,22 +42,43 @@ class CustomAdminSite(admin.AdminSite):
         return TemplateResponse(request, 'admin/index.html', context)
 
 
-class DjangoJobAdmin(admin.ModelAdmin):
-    pass
-    # list_display = ('id', 'name', 'next_run_time', 'job_state')
-   # list_filter = ('name', 'next_run_time')
-   # search_fields = ['name']
+class ProxyDjangoJob(DjangoJob):
+    """Прокси-класс для переопределения метаданных моделей
+    библиотеки django-appsheduler."""
+    class Meta:
+        proxy = True
+        verbose_name = "Задания Django"
+        verbose_name_plural = "Задания Django"
 
-# Класс для модели DjangoJobExecution
+
+class ProxyDjangoJobExecution(DjangoJobExecution):
+    """Прокси-класс для переопределения метаданных моделей
+    библиотеки django-appsheduler."""
+    class Meta:
+        proxy = True
+        verbose_name = "Выполненное задание Django"
+        verbose_name_plural = "Выполненные задания Django"
+
+
+class DjangoJobAdmin(admin.ModelAdmin):
+    list_display = ('id', 'next_run_time', 'readable_job_state')
+    list_filter = ('next_run_time',)
+    search_fields = ('readable_job_state',)
+
+    def readable_job_state(self, obj):
+        try:
+            return force_str(pickle.loads(obj.job_state)['trigger'])
+        except Exception as e:
+            return DESERIALIZED_ERROR.format(e=force_str(e))
+    readable_job_state.short_description = 'Trigger Time'
 
 
 class DjangoJobExecutionAdmin(admin.ModelAdmin):
-    pass
-    # list_display = ('id', 'run_time', 'job', 'exception', 'status')
-   # list_filter = ('run_time', 'job__name', 'status')
-   # search_fields = ['job__name']
+    list_display = ('id', 'run_time', 'job', 'exception', 'status')
+    list_filter = ('run_time', 'status')
+    search_fields = ('run_time',)
 
 
 сustom_admin_site = CustomAdminSite(name='myadmin')
-сustom_admin_site.register(DjangoJob, DjangoJobAdmin)
-сustom_admin_site.register(DjangoJobExecution, DjangoJobExecutionAdmin)
+сustom_admin_site.register(ProxyDjangoJob, DjangoJobAdmin)
+сustom_admin_site.register(ProxyDjangoJobExecution, DjangoJobExecutionAdmin)
