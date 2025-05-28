@@ -1,6 +1,7 @@
 import json
 
-with open(r'D:\Dev\kitmetiz\kitm\core\123.json', 'r', encoding='utf-8') as file:
+with open(
+        r'D:\Dev\kitmetiz\kitm\core\123.json', 'r', encoding='utf-8') as file:
     parsed_data = json.load(file)
 
 # Обходим структуру
