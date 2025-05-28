@@ -7,11 +7,11 @@ load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = os.getenv('SECRET_KEY', 'Нет секретного ключа!')
+SECRET_KEY = os.getenv('SECRET_KEY', 'emty')
 
-DEBUG = True
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'localhost').split(',')
 
-ALLOWED_HOSTS = []
+DEBUG = os.getenv('DEBUG', False) == 'True'
 
 INTERNAL_IPS = [
     '127.0.0.1',
@@ -67,17 +67,13 @@ TEMPLATES = [
 WSGI_APPLICATION = 'kitm.wsgi.application'
 
 DATABASES = {
-    # 'postgre_db': {
-    #     'ENGINE': 'django.db.backends.postgresql_psycopg2',
-    #     'NAME': 'kitdb',
-    #     'USER': 'postgres',
-    #     'PASSWORD': 'pass',
-    #     'HOST': '127.0.0.1',
-    #     'PORT': '5432',
-    # },
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': os.getenv('ENGINE_POSTGRES', 'django.db.backends.sqlite3'),
+        'NAME': os.getenv('POSTGRES_DB', BASE_DIR / 'db.sqlite3'),
+        'USER': os.getenv('POSTGRES_USER', 'django'),
+        'PASSWORD': os.getenv('POSTGRES_PASSWORD', ''),
+        'HOST': os.getenv('DB_HOST', ''),
+        'PORT': os.getenv('DB_PORT', 5432)
     }
 }
 
@@ -98,7 +94,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'Ru-ru'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Europe/Moscow'
 
 USE_I18N = True
 
@@ -122,9 +118,9 @@ LOGIN_URL = 'users:login'
 EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
 EMAIL_FILE_PATH = BASE_DIR / 'sent_emails'
 
-AUTHENTICATION_BACKENDS = [
-    'users.EmailAuthBackend.EmailAuthBackend',
-]
+# AUTHENTICATION_BACKENDS = [
+#     'users.EmailAuthBackend.EmailAuthBackend',
+# ]
 
 MEDIA_ROOT = BASE_DIR / 'smedia'
 MEDIA_NOM = BASE_DIR / 'smedia/nomenclature/'

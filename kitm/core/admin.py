@@ -45,6 +45,7 @@ class CustomAdminSite(admin.AdminSite):
 class ProxyDjangoJob(DjangoJob):
     """Прокси-класс для переопределения метаданных моделей
     библиотеки django-appsheduler."""
+
     class Meta:
         proxy = True
         verbose_name = "Задания Django"
@@ -54,6 +55,7 @@ class ProxyDjangoJob(DjangoJob):
 class ProxyDjangoJobExecution(DjangoJobExecution):
     """Прокси-класс для переопределения метаданных моделей
     библиотеки django-appsheduler."""
+
     class Meta:
         proxy = True
         verbose_name = "Выполненное задание Django"
@@ -65,12 +67,12 @@ class DjangoJobAdmin(admin.ModelAdmin):
     list_filter = ('next_run_time',)
     search_fields = ('readable_job_state',)
 
+    @admin.display(description='Триггер')
     def readable_job_state(self, obj):
         try:
             return force_str(pickle.loads(obj.job_state)['trigger'])
         except Exception as e:
             return DESERIALIZED_ERROR.format(e=force_str(e))
-    readable_job_state.short_description = 'Trigger Time'
 
 
 class DjangoJobExecutionAdmin(admin.ModelAdmin):

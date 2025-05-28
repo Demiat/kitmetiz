@@ -21,7 +21,7 @@ class Nomenclature(models.Model):
         max_length=constants.MIN_CHARFIELD,
     )
     unit_of_measure = models.CharField(
-        'Единица Измерения',
+        'Ед. изм.',
         max_length=constants.MIN_CHARFIELD
     )
     category = models.CharField('Категория', max_length=50)
