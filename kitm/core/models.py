@@ -1,7 +1,7 @@
 from django.db import models
 from django.conf import settings
 
-from . import constants
+import constants
 
 
 class Nomenclature(models.Model):
