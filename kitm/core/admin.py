@@ -22,12 +22,12 @@ class CustomAdminSite(admin.AdminSite):
             path(
                 'from-1c/',
                 self.admin_view(self.exchange_1С),
-                name='from_1c'
+                name='from-1c'
             ),
             path(
                 'load-images/',
                 self.admin_view(self.load_images),
-                name='load_images'
+                name='load-images'
             ),
         ]
         return my_urls + urls

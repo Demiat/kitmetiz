@@ -11,7 +11,6 @@ from core.models import Nomenclature
 
 load_dotenv()
 NOM_FIXTURE = 'nom_from_1c.json'
-NOM_IMAGES_FIXTURE = 'nom_images.json'
 FINAL_TEXT = 'Создано {}, обновлено {} записей!'
 BAD_CONNECTION = (
     'Нет соединения с эндпоинтом: {url}.'
@@ -32,22 +31,23 @@ def update_or_create_from_1c(parsed_data):
 
     uids = set(Nomenclature.objects.values_list('UID', flat=True))
 
-    for uid in parsed_data:
+    to_create = []
+    to_update = []
+    for uid, value in parsed_data.items():
         product = dict(
-            name=uid[0],
-            quantity=uid[1],
-            price=uid[2],
-            article=uid[3],
-            unit_of_measure=uid[4],
-            category=uid[5],
+            name=value[0],
+            quantity=value[1],
+            price=value[2],
+            article=value[3],
+            unit_of_measure=value[4],
+            category=value[5],
         )
-        to_create = []
-        to_update = []
         if uid not in uids:
             to_create.append(Nomenclature(UID=uid, **product))
         else:
             to_update.append(Nomenclature(UID=uid, **product))
 
+    create_items = update_items = ''
     if to_create:
         create_items = Nomenclature.objects.bulk_create(to_create)
     if to_update:
@@ -94,14 +94,14 @@ def process_exchange_1C_from_file():
 def load_nomenclature_images():
     """Загружает изображения для существующей номенклатуры."""
 
-    fixture_path = os.path.join(settings.CORE_FIXTURES, NOM_IMAGES_FIXTURE)
+    fixture_path = os.path.join(settings.CORE_FIXTURES, NOM_FIXTURE)
     with open(f'{fixture_path}', 'r', encoding='utf-8') as file:
         parsed_data = json.load(file)
 
     to_update = []
-    for uid in parsed_data:
-        if uid[6] != 'Нет Изображения':
-            form, imgstr = uid[6].decode().split(';base64,')
+    for uid, value in parsed_data.items():
+        if value[6] != 'Нет Изображения':
+            form, imgstr = value[6].decode().split(';base64,')
             ext = form.split('/')[-1]
             decoded_image = base64.b64decode(imgstr)
             filename = f'{uid}.{ext}'
@@ -110,10 +110,10 @@ def load_nomenclature_images():
             with open(img_path, 'wb') as output_file:
                 output_file.write(decoded_image)
                 # Заменим поле с изображением на путь к нему
-                uid[6] = img_path
+                value[6] = img_path
         else:
-            uid[6] = None
-        to_update.append(Nomenclature(UID=uid, image=uid[6]))
+            value[6] = None
+        to_update.append(Nomenclature(UID=uid, image=value[6]))
 
     update_items = Nomenclature.objects.bulk_update(
             to_update, ['image']
