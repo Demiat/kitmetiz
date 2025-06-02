@@ -109,7 +109,7 @@ CORE_FIXTURES = BASE_DIR / 'core/fixtures'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-AUTH_USER_MODEL = 'users.CustomUser'
+AUTH_USER_MODEL = 'users.User'
 
 CSRF_FAILURE_VIEW = 'pages.views.csrf_failure'
 
@@ -120,7 +120,7 @@ EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
 EMAIL_FILE_PATH = BASE_DIR / 'sent_emails'
 
 # AUTHENTICATION_BACKENDS = [
-#     'users.EmailAuthBackend.EmailAuthBackend',
+#     'users.email_auth_backend.EmailAuthBackend',
 # ]
 
 MEDIA_ROOT = BASE_DIR / 'smedia'

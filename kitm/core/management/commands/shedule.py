@@ -22,8 +22,7 @@ NAME_JOB_EXECUTIONS = 'delete_old_job_executions'
 
 def exchange_1c_job():
     """Обмен данными JSON из 1С."""
-    message = process_exchange_1C()
-    print(message)
+    print(process_exchange_1C())
 
 
 @util.close_old_connections
@@ -41,7 +40,7 @@ class Command(BaseCommand):
 
         scheduler.add_job(
             exchange_1c_job,
-            trigger=CronTrigger(second="*/59"),
+            trigger=CronTrigger(minute="*/1"),
             id=NAME_JOB_1C_EXCHANGE,  # уникальное имя работы
             max_instances=1,
             replace_existing=True,

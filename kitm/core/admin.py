@@ -5,7 +5,7 @@ from django.template.response import TemplateResponse
 from django_apscheduler.models import DjangoJob, DjangoJobExecution
 from django.utils.encoding import force_str
 
-from .funcs import process_exchange_1C
+from .funcs import process_exchange_1C_from_file, load_nomenclature_images
 
 DESERIALIZED_ERROR = 'Ошибка десериализации данных: {e}'
 
@@ -22,15 +22,20 @@ class CustomAdminSite(admin.AdminSite):
             path(
                 'from-1c/',
                 self.admin_view(self.exchange_1С),
-                name='from-1c'
+                name='from_1c'
+            ),
+            path(
+                'load-images/',
+                self.admin_view(self.load_images),
+                name='load_images'
             ),
         ]
         return my_urls + urls
 
-    def exchange_1С(self, request):
+    def _exchange_process(self, request, func):
         message = None
         if request.method == 'POST':
-            message = process_exchange_1C()
+            message = func()
         # Наследуем контекст от родительского класса AdminSite
         context = self.each_context(request)
         context.update({
@@ -40,6 +45,12 @@ class CustomAdminSite(admin.AdminSite):
             'message': message,  # Добавим свои данные
         })
         return TemplateResponse(request, 'admin/index.html', context)
+
+    def exchange_1С(self, request):
+        self._exchange_process(request, process_exchange_1C_from_file)
+
+    def load_images(self, request):
+        self._exchange_process(request, load_nomenclature_images)
 
 
 class ProxyDjangoJob(DjangoJob):

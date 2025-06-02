@@ -23,7 +23,11 @@
   <h1 style="background-color: cornflowerblue; color: white;">Обмен с 1С</h1>
     <form action="{% url 'myadmin:from-1c' %}" method="post">
       {% csrf_token %}
-      <input type="submit" value="Выполнить обмен">
+      <input type="submit" value="Обмен данными из 1С">
+    </form>
+    <form action="{% url 'myadmin:load-images' %}" method="post">
+      {% csrf_token %}
+      <input type="submit" value="Загрузка картинок из 1С">
     </form>
     {% if message %}
         <div class="alert alert-success">

@@ -4,6 +4,7 @@
 
 # Удаляем все файлы миграций
 rm -f core/migrations/[!_]*.py
+rm -f users/migrations/[!_]*.py
 # Удаляем базу данных
 rm -f db.sqlite3
 
@@ -19,6 +20,6 @@ python manage.py migrate
 export DJANGO_SUPERUSER_EMAIL=admin@admin.ru
 export DJANGO_SUPERUSER_USERNAME=admin
 export DJANGO_SUPERUSER_PASSWORD=123
-python manage.py createsuperuser --first_name Dima --last_name Tarasov --noinput
+python manage.py createsuperuser --noinput
 
 echo "Setup complete!"

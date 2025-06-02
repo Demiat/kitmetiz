@@ -1,6 +1,6 @@
 from django.contrib.auth.admin import UserAdmin
 
-from .models import CustomUser
+from .models import User
 from core.admin import сustom_admin_site
 
-сustom_admin_site.register(CustomUser, UserAdmin)
+сustom_admin_site.register(User, UserAdmin)
