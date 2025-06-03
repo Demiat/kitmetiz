@@ -12,7 +12,9 @@ class Nomenclature(models.Model):
     UID = models.CharField(
         max_length=36,
         unique=True,
-        editable=False)
+        editable=False,
+        primary_key=True
+    )
     quantity = models.PositiveSmallIntegerField('Количество')
     text = models.TextField('Описание', max_length=constants.MAX_CHARFIELD)
     price = models.PositiveIntegerField('Цена')
@@ -33,3 +35,4 @@ class Nomenclature(models.Model):
 
     class Meta:
         ordering = ('category',)
+        db_table = 'nomenclature'

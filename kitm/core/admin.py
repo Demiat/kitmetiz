@@ -47,10 +47,10 @@ class CustomAdminSite(admin.AdminSite):
         return TemplateResponse(request, 'admin/index.html', context)
 
     def exchange_1С(self, request):
-        self._exchange_process(request, process_exchange_1C_from_file)
+        return self._exchange_process(request, process_exchange_1C_from_file)
 
     def load_images(self, request):
-        self._exchange_process(request, load_nomenclature_images)
+        return self._exchange_process(request, load_nomenclature_images)
 
 
 class ProxyDjangoJob(DjangoJob):

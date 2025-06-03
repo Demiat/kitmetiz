@@ -11,7 +11,7 @@ from core.models import Nomenclature
 
 load_dotenv()
 NOM_FIXTURE = 'nom_from_1c.json'
-FINAL_TEXT = 'Создано {}, обновлено {} записей!'
+FINAL_TEXT = 'Записей создано: {}, обновлено: {}'
 BAD_CONNECTION = (
     'Нет соединения с эндпоинтом: {url}.'
     'Ошибка исключения: {exc_error}.'
@@ -47,14 +47,15 @@ def update_or_create_from_1c(parsed_data):
         else:
             to_update.append(Nomenclature(UID=uid, **product))
 
-    create_items = update_items = ''
+    update_items = 0
+    create_items = []
     if to_create:
         create_items = Nomenclature.objects.bulk_create(to_create)
     if to_update:
         update_items = Nomenclature.objects.bulk_update(
             to_update, list(product.keys())
         )
-    return FINAL_TEXT.format(len(create_items), len(update_items))
+    return FINAL_TEXT.format(len(create_items), update_items)
 
 
 def process_exchange_1C():
@@ -88,7 +89,7 @@ def process_exchange_1C_from_file():
     with open(f'{fixture_path}', 'r', encoding='utf-8') as file:
         parsed_data = json.load(file)
 
-    update_or_create_from_1c(parsed_data)
+    return update_or_create_from_1c(parsed_data)
 
 
 def load_nomenclature_images():
@@ -101,7 +102,7 @@ def load_nomenclature_images():
     to_update = []
     for uid, value in parsed_data.items():
         if value[6] != 'Нет Изображения':
-            form, imgstr = value[6].decode().split(';base64,')
+            form, imgstr = value[6].split(';base64,')
             ext = form.split('/')[-1]
             decoded_image = base64.b64decode(imgstr)
             filename = f'{uid}.{ext}'
