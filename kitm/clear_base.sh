@@ -17,7 +17,7 @@ python manage.py migrate
 # python manage.py load_tags data/tags.json
 
 # Создаем тестового суперюзера
-export DJANGO_SUPERUSER_EMAIL=admin@admin.ru
+export DJANGO_SUPERUSER_EMAIL=ad@ad.ru
 export DJANGO_SUPERUSER_USERNAME=admin
 export DJANGO_SUPERUSER_PASSWORD=123
 python manage.py createsuperuser --noinput

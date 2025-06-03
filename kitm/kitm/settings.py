@@ -126,3 +126,5 @@ EMAIL_FILE_PATH = BASE_DIR / 'sent_emails'
 MEDIA_ROOT = BASE_DIR / 'smedia'
 MEDIA_NOM = BASE_DIR / 'smedia/nomenclature/'
 MEDIA_URL = '/path/'
+
+EMAIL_HOST_USER = 'demiat@mail.ru'

@@ -74,6 +74,7 @@ def process_exchange_1C():
         raise ConnectionError(
             BAD_CONNECTION.format(url=API_1C_URL, exc_error=e)
         )
+
     if response.status_code != 200:
         raise NoHttpStatusOk(
             NO_STATUS_OK.format(response.status_code, response.text))
@@ -112,14 +113,7 @@ def load_nomenclature_images():
                 output_file.write(decoded_image)
                 # Заменим поле с изображением на путь к нему
                 value[6] = img_path
-        else:
-            value[6] = None
-        to_update.append(Nomenclature(UID=uid, image=value[6]))
+            to_update.append(Nomenclature(UID=uid, image=value[6]))
 
-    update_items = Nomenclature.objects.bulk_update(
-            to_update, ['image']
-        )
-    return f'Update {update_items} images'
-
-
-# process_exchange_1C()
+    items = Nomenclature.objects.bulk_update(to_update, ['image'])
+    return f'Установленных картинок: {items}.'
