@@ -1,19 +1,48 @@
+from random import randint
+
 from django.core.mail import send_mail
 from django.urls import reverse_lazy, reverse
+from django.shortcuts import redirect, render
 from django.contrib.auth import get_user_model
 from django.views.generic import CreateView, UpdateView, TemplateView
-from django.contrib.auth.tokens import default_token_generator
-from django.utils.http import (
-    urlsafe_base64_decode,
-    urlsafe_base64_encode
-)
-from django.utils.encoding import force_bytes, force_str
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.conf import settings
 
-from .forms import CustomUserCreationForm
+from .forms import CustomUserCreationForm, EmailVerificationForm
+from .constants import MIN_CODE, MAX_CODE
 
 User = get_user_model()
+SITE = 'http://localhost:8000/'
+SEND_MAIL_MSG = (
+    'Пожалуйста, подтвердите регистрацию пройдя по следующей ссылке: {}'
+)
+VERIFICATION_CODE = 'verification_code'
+NOT_EMAIL = 'Email не найден!'
+WRONG_CODE = 'Неверный код подтверждения!'
+
+
+def send_code_to_email(request):
+    """Отправляет код для подтверждения email."""
+    if not request.method == 'POST':
+        return render(
+            request,
+            'registration/verify_email.html',
+            {'form': EmailVerificationForm()}
+        )
+    form = EmailVerificationForm(request.POST)
+    if form.is_valid():
+        confirmation_code = randint(MIN_CODE, MAX_CODE)
+        request.session[VERIFICATION_CODE] = confirmation_code
+        request.session['email'] = form.cleaned_data['email']
+
+        send_mail(
+            f'Активируйте вашу учетную запись для {SITE}',
+            f'Код подтверждения: {confirmation_code}',
+            settings.EMAIL_HOST_USER,
+            (form.cleaned_data['email'],),
+            fail_silently=True
+        )
+        return redirect('users:registration')
 
 
 class RegisterUserView(CreateView):
@@ -22,71 +51,24 @@ class RegisterUserView(CreateView):
     model = User
     template_name = 'registration/registration_form.html'
     form_class = CustomUserCreationForm
-    success_url = reverse_lazy('users:login')
+    success_url = reverse_lazy(settings.LOGIN_URL)
 
     def form_valid(self, form):
-        # response = super().form_valid(form)
         user = form.save(commit=False)
-        user.is_active = False
+        entered_code = form.cleaned_data[VERIFICATION_CODE]
+        session_code = self.request.session.get(VERIFICATION_CODE)
+        if not self.request.session.get('email'):
+            form.add_error(None, NOT_EMAIL)
+            return self.form_invalid(form)
+        if not session_code or entered_code != session_code:
+            form.add_error(VERIFICATION_CODE, WRONG_CODE)
+            return self.form_invalid(form)
+        user.email = self.request.session.get('email')
         user.save()
-
-        # Генерируем уникальный токен для активации
-        # uidb64 = urlsafe_base64_encode(force_bytes(user.pk))
-        # token = default_token_generator.make_token(user)
-
-        # Формируем ссылку активации
-        # link = reverse(
-        #     'users:activate',
-        #     kwargs={'uidb64': uidb64, 'token': token}
-        # )
-        # full_link = f"{self.request.get_host()}{link}"
-
-        # Отправляем письмо с ссылкой на активацию
-        send_mail(
-            'Активируйте вашу учетную запись',
-            f"""Пожалуйста, подтвердите регистрацию пройдя по следующей ссылке:
-            http://{self.request.get_host()}{reverse(
-                'users:activate',
-                kwargs={
-                    'uidb64': urlsafe_base64_encode(force_bytes(user.pk)),
-                    'token': default_token_generator.make_token(user)
-                }
-            )}
-            """,
-            settings.EMAIL_HOST_USER,
-            (form.cleaned_data['email'],),
-            fail_silently=True
-        )
+        del self.request.session[VERIFICATION_CODE]
+        del self.request.session['email']
 
         return super().form_valid(form)
-
-
-def activate_user(request, uidb64, token): pass
-    # try:
-    #     uid = force_text(urlsafe_base64_decode(uidb64))
-    #     user = User.objects.get(pk=uid)
-
-    #     if default_token_generator.check_token(user, token):
-    #         user.is_active = True
-    #         user.save()
-
-    #          # Отправляем письмо после успешной активации
-        # send_mail(
-        #     'Успешная регистрация',
-        #     f"""Поздравляем! {user}, Вы успешно
-        #     активировали учетную запись на нашем сайте.""",
-        #     'demiat@mail.ru',
-        #     (form.cleaned_data['email'],),
-        #     fail_silently=True
-        # )
-    #         return redirect('users:login')
-    #     else:
-    #         messages.error(request, 'Ссылка недействительна или устарела.')
-    #         return redirect('users:register')
-    # except Exception as e:
-    #     print(e)
-    #     messages.error(request, 'Что-то пошло не так.')
-    #     return redirect('users:register')
 
 
 class UserProfile(LoginRequiredMixin, TemplateView):

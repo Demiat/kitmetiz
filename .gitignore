@@ -1,6 +1,7 @@
 static/
 sent_emails/
 smedia
+clear_base.sh
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
