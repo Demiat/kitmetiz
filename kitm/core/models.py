@@ -36,3 +36,5 @@ class Nomenclature(models.Model):
     class Meta:
         ordering = ('category',)
         db_table = 'nomenclature'
+        verbose_name = 'Номенклатура'
+        verbose_name_plural = 'Номенклатура'

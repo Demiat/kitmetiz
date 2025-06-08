@@ -4,10 +4,28 @@ from django.contrib import admin
 from django.template.response import TemplateResponse
 from django_apscheduler.models import DjangoJob, DjangoJobExecution
 from django.utils.encoding import force_str
+from django.utils.safestring import mark_safe
 
 from .funcs import process_exchange_1C_from_file, load_nomenclature_images
+from .models import Nomenclature
 
 DESERIALIZED_ERROR = 'Ошибка десериализации данных: {e}'
+
+
+class NomenclatureAdmin(admin.ModelAdmin):
+    """Номенклатура."""
+
+    list_display = (
+        'name', 'text', 'image_field', 'price', 'article',
+        'category', 'on_home'
+    )
+
+    @mark_safe
+    def image_field(self, obj):
+        """Выводит изображение номеклатуры в миниатюре."""
+        if obj.image:
+            return f'<img src="{obj.image.url}" width="50">'
+        return 'not image'
 
 
 class CustomAdminSite(admin.AdminSite):
@@ -93,5 +111,6 @@ class DjangoJobExecutionAdmin(admin.ModelAdmin):
 
 
 сustom_admin_site = CustomAdminSite(name='myadmin')
+сustom_admin_site.register(Nomenclature, NomenclatureAdmin)
 сustom_admin_site.register(ProxyDjangoJob, DjangoJobAdmin)
 сustom_admin_site.register(ProxyDjangoJobExecution, DjangoJobExecutionAdmin)

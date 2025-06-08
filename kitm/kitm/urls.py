@@ -1,5 +1,6 @@
 from django.urls import path, include
 from django.conf import settings
+from django.conf.urls.static import static
 
 from core.admin import сustom_admin_site
 from users.views import RegisterUserView
@@ -18,5 +19,6 @@ urlpatterns = [
 
 if settings.DEBUG:
     import debug_toolbar
-    # Добавить к списку urlpatterns список адресов из приложения debug_toolbar:
     urlpatterns += (path('__debug__/', include(debug_toolbar.urls)),)
+    urlpatterns += static(
+        settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

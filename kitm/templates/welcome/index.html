@@ -1,13 +1,19 @@
 {% extends "base.html" %}
 {% block title %}
-  Приветствуем!
+  Сайт строительных товаров!
 {% endblock %}
 {% block content %}
   <h1>Хай</h1>
-  {% comment %} {% for nom_card in page_obj %}
-    <article class="mb-5">
-      {% include "includes/nom_card.html" %}
-    </article>
-  {% endfor %} {% endcomment %}
-  {% comment %} {% include "includes/paginator.html" %} {% endcomment %}
+  <div class="container">
+    <div class="row row-cols-1 row-cols-md-4 g-4">
+      {% for nom_card in page_obj %}
+        <div class="col">
+          <article class="mb-5">
+            {% include "includes/nom_card.html" %}
+          </article>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+  {% include "includes/paginator.html" %}
 {% endblock %}
