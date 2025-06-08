@@ -114,7 +114,7 @@ AUTH_USER_MODEL = 'users.User'
 CSRF_FAILURE_VIEW = 'pages.views.csrf_failure'
 
 LOGIN_REDIRECT_URL = 'welcome:index'
-LOGIN_URL = 'users:login'
+LOGIN_URL = 'login'
 
 EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
 EMAIL_FILE_PATH = BASE_DIR / 'sent_emails'

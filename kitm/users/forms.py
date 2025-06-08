@@ -10,7 +10,7 @@ User = get_user_model()
 class EmailVerificationForm(forms.Form):
     """Форма ввода email для отправки кода проверки."""
 
-    email = forms.EmailField(label='Ваш E-Mail:')
+    email = forms.EmailField(label='', help_text='Электронная почта')
 
 
 class CustomUserCreationForm(UserCreationForm):

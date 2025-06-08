@@ -15,7 +15,7 @@
         {% if user.is_authenticated and request.user == profile %}
         <small>
         <a class="btn btn-sm btn-outline-secondary" href="{% url 'users:edit_profile' %}">Редактировать профиль</a>
-        <a class="btn btn-sm btn-outline-secondary" href="{% url 'users:password_change' %}">Изменить пароль</a>
+        <a class="btn btn-sm btn-outline-secondary" href="{% url 'password_change' %}">Изменить пароль</a>
         </small>
         {% endif %}
       </div>

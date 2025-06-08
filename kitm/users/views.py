@@ -24,6 +24,8 @@ WRONG_CODE = 'Неверный код подтверждения!'
 def send_code_to_email(request):
     """Отправляет код для подтверждения email."""
     if not request.method == 'POST':
+        if request.session.get('email'):
+            return redirect('registration')
         return render(
             request,
             'registration/verify_email.html',
@@ -42,7 +44,7 @@ def send_code_to_email(request):
             (form.cleaned_data['email'],),
             fail_silently=True
         )
-        return redirect('users:registration')
+        return redirect('registration')
 
 
 class RegisterUserView(CreateView):

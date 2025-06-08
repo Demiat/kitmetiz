@@ -42,7 +42,7 @@
                 {% if user.is_authenticated %}
                   <li><a class="dropdown-item ps-0" href="{% url 'users:profile' user.username %}">{{ user.username }}</a></li>
                   <li>
-                    <form action="{% url 'users:logout' %}" method="post">
+                    <form action="{% url 'logout' %}" method="post">
                       {% csrf_token %}
                       <button type="submit" class="btn btn-sm btn-outline-secondary">Выйти</button>
                     </form>
@@ -50,7 +50,7 @@
                 {% else %}
                   <div class="btn-group" role="group" aria-label="Basic outlined example">
                     <button type="button" class="btn btn-sm btn-outline-primary"><a class="text-decoration-none text-reset"
-                      href="{% url 'users:login' %}">Войти</a></button>
+                      href="{% url 'login' %}">Войти</a></button>
                     <button type="button" class="btn btn-sm btn-outline-primary"><a class="text-decoration-none text-reset"
                       href="{% url 'users:verify_email' %}">Регистрация</a></button>
                   </div>
