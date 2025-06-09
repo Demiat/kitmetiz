@@ -8,7 +8,11 @@
     <p class="card-text">{{ nom_card.text }}</p>
   </div>
   <ul class="list-group list-group-flush">
-    <li class="list-group-item">{{ nom_card.price }} руб. В наличии: {{ nom_card.quantity }}, {{ nom_card.unit_of_measure }}</li>
+    <li class="list-group-item">{{ nom_card.price }} руб.
+      <svg width="16px" height="16px" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="8" cy="8" r="5.25" stroke="#6CCA70" stroke-width="1.5"/>
+        <path d="M6 7.5L8 9.5L12 5" stroke="#6CCA70" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+      </svg>В наличии: {{ nom_card.quantity }}, {{ nom_card.unit_of_measure }}</li>
     <li class="list-group-item">Арт: {{ nom_card.article }}</li>
     <li class="list-group-item">{{ nom_card.category }}</li>
   </ul>
