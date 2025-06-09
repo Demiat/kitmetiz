@@ -7,7 +7,7 @@
 <header>
   <div class="container">
     <nav class="navbar nav-h" style="background-image: url('{% static 'img/verh1400.png' %}')">
-    <a class="navbar-brand mx-auto" href="{% url 'welcome:index' %}">
+    <a class="navbar-brand ms-4" href="{% url 'welcome:index' %}">
       <img src="{% static 'img/logo_kit.png' %}" class="d-inline-block align-top" alt="КИТ-Метиз">
     </a>
     {% with request.resolver_match.view_name as view_name %}

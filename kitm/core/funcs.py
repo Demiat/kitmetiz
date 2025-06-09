@@ -41,6 +41,7 @@ def update_or_create_from_1c(parsed_data):
             article=value[3],
             unit_of_measure=value[4],
             category=value[5],
+            on_home=True  # Временно
         )
         if uid not in uids:
             to_create.append(Nomenclature(UID=uid, **product))
