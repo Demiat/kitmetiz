@@ -119,8 +119,8 @@ LOGIN_URL = 'login'
 EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
 EMAIL_FILE_PATH = BASE_DIR / 'sent_emails'
 
-MEDIA_ROOT = BASE_DIR / 'smedia'
-MEDIA_NOM = BASE_DIR / 'smedia/nomenclature/'
-MEDIA_URL = '/path/'
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'smedia/'
+MEDIA_NOM = 'nomenclature/'
 
 EMAIL_HOST_USER = 'demiat@mail.ru'

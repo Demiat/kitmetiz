@@ -109,11 +109,19 @@ def load_nomenclature_images():
             decoded_image = base64.b64decode(imgstr)
             filename = f'{uid}.{ext}'
             # Сохраняем полученное изображение
-            img_path = os.path.join(settings.MEDIA_NOM, filename)
-            with open(img_path, 'wb') as output_file:
-                output_file.write(decoded_image)
+            img_path = os.path.join(
+                settings.MEDIA_ROOT,
+                settings.MEDIA_NOM,
+                filename
+            )
+            try:
+                with open(img_path, 'wb') as output_file:
+                    output_file.write(decoded_image)
+            except Exception as e:
+                print(f'Ошибка при записи изображения: {e}')
+            else:
                 # Заменим поле с изображением на путь к нему
-                value[6] = img_path
+                value[6] = os.path.relpath(img_path, start=settings.MEDIA_ROOT)
             to_update.append(Nomenclature(UID=uid, image=value[6]))
 
     items = Nomenclature.objects.bulk_update(to_update, ['image'])

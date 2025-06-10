@@ -1,0 +1,1 @@
+rm -r smedia/nomenclature/*.jpg
