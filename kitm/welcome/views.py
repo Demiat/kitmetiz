@@ -1,8 +1,7 @@
 from django.views.generic import ListView
 
 from core.models import Nomenclature
-
-PAGINATOR_LIMIT = 8
+from core.constants import PAGINATOR_LIMIT
 
 
 class Welcome(ListView):

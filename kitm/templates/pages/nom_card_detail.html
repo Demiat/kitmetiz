@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block title %}
+  Детальная карточка товара
+{% endblock %}
+{% block content %}
+<div class="card mb-3" style="width: 18rem; min-height: 300px;">
+    <!-- Верхняя часть карточки -->
+    <div class="card-header bg-transparent pt-3 pb-0">
+      {% if object.image %}
+      <img src="{{ object.image.url }}" class="card-img-top" alt="{{ object.name }}" style="height: 150px; object-fit: contain;">
+      {% endif %}
+      <h6 class="card-title mt-2 mb-3" style="min-height: 100px;">{{ object.name }}<br><small class="text-muted">Артикул: {{ object.article }}</small></h6>
+      <svg width="16px" height="16px" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="8" cy="8" r="5.25" stroke="#6CCA70" stroke-width="1.5"/>
+        <path d="M6 7.5L8 9.5L12 5" stroke="#6CCA70" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+      </svg> В наличии: <b>{{ object.quantity }}</b>, {{ object.unit_of_measure }}
+    </div>
+  
+    <!-- Нижняя часть карточки -->
+    <div class="card">
+      <div class="card-body bg-info text-dark rounded-bottom p-3">
+        <div class="row g-0 align-items-center h-100">
+          <div class="col-md-12">
+            <span class="badge bg-success float-start px-3 py-1 fs-5 fw-bold">{{ object.price }}</span>&nbsp;&nbsp;<span class="fs-5">руб.</span><br />
+              <div class="mt-3 mb-3 fs-6">
+                  {{ object.category }}
+              </div>    
+            <!-- Рейтинг -->
+            <form action="{% url 'pages:nom_card_detail' object.pk %}" method="POST">
+              {% csrf_token %}
+              <div class="row g-2 align-items-center">
+                <div class="col-auto">
+                  <select name="rating" class="form-select form-select-sm">
+                    <option disabled selected>Оценка</option>
+                      <option value="1">★☆☆☆☆</option>
+                      <option value="2">★★☆☆☆</option>
+                      <option value="3">★★★☆☆</option>
+                      <option value="4">★★★★☆</option>
+                      <option value="5">★★★★★</option>
+                    </select>
+                </div>
+                <div class="col-auto">
+                  <button type="submit" class="btn btn-outline-success btn-sm">Отметить</button>
+                </div>
+              </div>
+            </form>   
+          </div>
+        </div>
+      </div>
+    </div>
+</div>
+{% endblock %}
