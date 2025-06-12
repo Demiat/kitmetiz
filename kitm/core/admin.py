@@ -7,7 +7,7 @@ from django.utils.encoding import force_str
 from django.utils.safestring import mark_safe
 
 from .funcs import process_exchange_1C_from_file, load_nomenclature_images
-from .models import Nomenclature
+from .models import Nomenclature, Rating
 
 DESERIALIZED_ERROR = 'Ошибка десериализации данных: {e}'
 
@@ -110,7 +110,12 @@ class DjangoJobExecutionAdmin(admin.ModelAdmin):
     search_fields = ('run_time',)
 
 
+class RatingAdmin(admin.ModelAdmin):
+    pass
+
+
 сustom_admin_site = CustomAdminSite(name='myadmin')
+сustom_admin_site.register(Rating, RatingAdmin)
 сustom_admin_site.register(Nomenclature, NomenclatureAdmin)
 сustom_admin_site.register(ProxyDjangoJob, DjangoJobAdmin)
 сustom_admin_site.register(ProxyDjangoJobExecution, DjangoJobExecutionAdmin)

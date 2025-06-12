@@ -87,18 +87,18 @@ class UserProfile(LoginRequiredMixin, TemplateView):
 
 
 class EditProfile(LoginRequiredMixin, UpdateView):
-    """Редактирование профиля пользователя"""
+    """Редактирование профиля пользователя."""
 
     model = User
     fields = ('username', 'first_name', 'last_name', 'email')
     template_name = 'users/user.html'
 
     def get_object(self):
-        """Предоставляем объект модели для представления"""
+        """Предоставляем объект модели для обновления."""
         return self.request.user
 
     def get_success_url(self):
-        """Переходит в профиль пользователя после обновления объекта"""
+        """Переходит в профиль пользователя после обновления объекта."""
         # Получаем имя пользователя после редактирования профиля
         username = self.object.username
         return reverse('users:profile', args=(username,))

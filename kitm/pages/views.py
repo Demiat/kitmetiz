@@ -1,9 +1,6 @@
 from django.views.generic import TemplateView
-from django.shortcuts import render
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.shortcuts import render, redirect
 from django.views.generic.detail import DetailView
-from django.http import HttpResponseRedirect
-from django.urls import reverse
 
 from core.constants import INTERNAL_SERVER_ERROR, NOT_FOUND, FORBIDDEN
 from core.models import Nomenclature, Rating
@@ -21,26 +18,53 @@ class Contact(TemplateView):
     template_name = 'pages/contact.html'
 
 
-class NomenclatureCardDetail(LoginRequiredMixin, DetailView):
+class NomenclatureCardDetail(DetailView):
     """Детальная карточка номенклатуры."""
 
     model = Nomenclature
     template_name = 'pages/nom_card_detail.html'
 
+    def get_context_data(self, **kwargs):
+        """Добавляет рейтинг номенклатуры от автора в контекст шаблона."""
+        context = super().get_context_data(**kwargs)
+        if self.request.user.is_authenticated:
+            try:
+                context['current_user_rating'] = Rating.objects.get(
+                    nomenclature=self.object,
+                    author=self.request.user
+                ).rating
+            except Rating.DoesNotExist:
+                context['current_user_rating'] = None
+        return context
+
     def post(self, request, *args, **kwargs):
         """Устанавливает рейтинг номенклатуры."""
-        if request.POST.get('rating'):
+        if (
+            request.user.is_authenticated
+            and (rating := request.POST.get('rating'))
+        ):
             nomenclature = self.get_object()
-            Rating.objects.update_or_create(
+            # Для предотвращения замены авторства сначала найдем
+            # существующий рейтинг от текущего пользователя
+            existing_rating = Rating.objects.filter(
                 nomenclature=nomenclature,
-                author=request.user,
-                defaults={'rating': int(request.POST['rating'])}
-            )
-        return HttpResponseRedirect(
-            reverse(
-                'pages:nom_card_detail',
-                kwargs={'pk': self.kwargs.get('pk')}
-            )
+                author=request.user
+            ).first()
+
+            # Обновляем, если автор и текущий пользователь совпали
+            if existing_rating:
+                existing_rating.rating = int(rating)
+                existing_rating.save()
+            # Либо создаем новый рейтинг от текущего пользователя
+            else:
+                Rating.objects.create(
+                    nomenclature=nomenclature,
+                    author=request.user,
+                    rating=int(rating)
+                )
+        return redirect(
+            'pages:nom_card_detail',
+            pk=self.kwargs.get('pk')
         )
 
 

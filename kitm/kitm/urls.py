@@ -3,7 +3,6 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 from core.admin import сustom_admin_site
-from core.views import set_rating_nomenclature
 from users.views import RegisterUserView
 
 handler404 = 'pages.views.page_not_found'

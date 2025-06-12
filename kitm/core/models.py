@@ -6,6 +6,8 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 from core.constants import MAX_CHARFIELD, MIN_CHARFIELD
 from users.models import User
 
+MAX_LENGTH_NAME = 30
+
 
 class Nomenclature(models.Model):
     """Номенклатура."""
@@ -44,6 +46,9 @@ class Nomenclature(models.Model):
         verbose_name = 'Номенклатура'
         verbose_name_plural = 'Номенклатура'
 
+    def __str__(self):
+        return self.name[:MAX_LENGTH_NAME]
+
 
 class Rating(models.Model):
     """Рейтинг для номеклатуры."""
@@ -59,6 +64,7 @@ class Rating(models.Model):
         verbose_name='Автор'
     )
     rating = models.PositiveSmallIntegerField(
+        verbose_name='Рейтинг',
         validators=[
             MinValueValidator(1),
             MaxValueValidator(5)
@@ -77,3 +83,6 @@ class Rating(models.Model):
                 name='unique_rating'
             ),
         )
+
+    def __str__(self):
+        return f'{self.nomenclature.name[:MAX_LENGTH_NAME]}: {self.rating}'
