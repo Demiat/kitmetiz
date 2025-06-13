@@ -1,9 +1,11 @@
 <div class="card mb-3" style="width: 18rem; min-height: 300px;">
   <!-- Верхняя часть карточки -->
-  <span class="position-absolute top-0 end-0 p-2">
-    <span style="color: goldenrod;">★</span>
-    {{ nom_card.avg_rating }}
-  </span>
+  {% if nom_card.avg_rating %}
+    <span class="position-absolute top-0 end-0 p-2">
+      <span style="color: goldenrod;">★</span>
+      {{ nom_card.avg_rating }}
+    </span>
+  {% endif %}
   <div class="card-header bg-transparent pt-3 pb-0">
     {% if nom_card.image %}
     <img src="{{ nom_card.image.url }}" class="card-img-top" alt="{{ nom_card.name }}" style="height: 150px; object-fit: contain;">

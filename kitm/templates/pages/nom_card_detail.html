@@ -6,6 +6,12 @@
 <div class="d-flex justify-content-center">
   <div class="card mb-3" style="width: 25rem; min-height: 300px;">
       <!-- Верхняя часть карточки -->
+      {% if object.avg_rating %}
+        <span class="position-absolute top-0 end-0 p-2">
+          <span style="color: goldenrod;">★</span>
+          {{ object.avg_rating }}
+        </span>
+      {% endif %}
       <div class="card-header bg-transparent pt-3 pb-0">
         {% if object.image %}
         <img src="{{ object.image.url }}" class="card-img-top" alt="{{ object.name }}" style="height: 150px; object-fit: contain;">

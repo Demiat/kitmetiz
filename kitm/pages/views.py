@@ -1,6 +1,7 @@
 from django.views.generic import TemplateView
 from django.shortcuts import render, redirect
 from django.views.generic.detail import DetailView
+from django.db.models import Avg
 
 from core.constants import INTERNAL_SERVER_ERROR, NOT_FOUND, FORBIDDEN
 from core.models import Nomenclature, Rating
@@ -23,6 +24,7 @@ class NomenclatureCardDetail(DetailView):
 
     model = Nomenclature
     template_name = 'pages/nom_card_detail.html'
+    queryset = Nomenclature.objects.annotate(avg_rating=Avg('ratings__rating'))
 
     def get_context_data(self, **kwargs):
         """Добавляет рейтинг номенклатуры от автора в контекст шаблона."""
