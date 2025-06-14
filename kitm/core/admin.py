@@ -7,7 +7,7 @@ from django.utils.encoding import force_str
 from django.utils.safestring import mark_safe
 
 from .funcs import process_exchange_1C_from_file, load_nomenclature_images
-from .models import Nomenclature, Rating
+from .models import Nomenclature, Rating, Category
 
 DESERIALIZED_ERROR = 'Ошибка десериализации данных: {e}'
 
@@ -111,10 +111,19 @@ class DjangoJobExecutionAdmin(admin.ModelAdmin):
 
 
 class RatingAdmin(admin.ModelAdmin):
+    """Рейтинг номенклатуры."""
+
     pass
 
 
+class CategoryAdmin(admin.ModelAdmin):
+    """Категории номенклатуры."""
+
+    list_display = ('name', 'slug')
+
+
 сustom_admin_site = CustomAdminSite(name='myadmin')
+сustom_admin_site.register(Category, CategoryAdmin)
 сustom_admin_site.register(Rating, RatingAdmin)
 сustom_admin_site.register(Nomenclature, NomenclatureAdmin)
 сustom_admin_site.register(ProxyDjangoJob, DjangoJobAdmin)

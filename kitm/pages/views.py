@@ -1,18 +1,22 @@
 from django.views.generic import TemplateView
 from django.shortcuts import render, redirect
 from django.views.generic.detail import DetailView
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
 from django.db.models import Avg
 
 from core.constants import INTERNAL_SERVER_ERROR, NOT_FOUND, FORBIDDEN
 from core.models import Nomenclature, Rating
 
 
+@method_decorator(cache_page(60 * 60), name='dispatch')
 class About(TemplateView):
     """Статичная страница о Компании"""
 
     template_name = 'pages/about.html'
 
 
+@method_decorator(cache_page(60 * 60), name='dispatch')
 class Contact(TemplateView):
     """Статичная страница - Информация"""
 

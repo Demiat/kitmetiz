@@ -2,11 +2,36 @@ from django.db import models
 from django.conf import settings
 from django.core.validators import MinValueValidator, MaxValueValidator
 
-
-from core.constants import MAX_CHARFIELD, MIN_CHARFIELD
 from users.models import User
 
-MAX_LENGTH_NAME = 30
+MAX_LENGTH_NAME = 50
+MAX_CHARFIELD = 256
+MIN_CHARFIELD = 10
+MAX_SLUGFIELD = 64
+STRING_LIMITATION = 20
+
+
+class Category(models.Model):
+    """Категории номенклатуры."""
+
+    name = models.CharField(
+        verbose_name='Название',
+        max_length=MAX_LENGTH_NAME
+    )
+    slug = models.SlugField(
+        verbose_name='Идентификатор',
+        max_length=MAX_SLUGFIELD,
+        unique=True
+    )
+
+    class Meta:
+        ordering = ('name',)
+        db_table = 'сategory'
+        verbose_name = 'Категория'
+        verbose_name_plural = 'Категории'
+
+    def __str__(self):
+        return self.name[:STRING_LIMITATION]
 
 
 class Nomenclature(models.Model):
@@ -33,7 +58,12 @@ class Nomenclature(models.Model):
         'Ед. изм.',
         max_length=MIN_CHARFIELD
     )
-    category = models.CharField('Категория', max_length=50)
+    category = models.ForeignKey(
+        Category,
+        on_delete=models.PROTECT,
+        verbose_name='Категория',
+        max_length=MAX_LENGTH_NAME
+    )
     on_home = models.BooleanField('На Главной', default=False)
     image = models.ImageField(
         'Изображение',
@@ -43,6 +73,7 @@ class Nomenclature(models.Model):
     class Meta:
         ordering = ('category',)
         db_table = 'nomenclature'
+        default_related_name = '%(model_name)ss'
         verbose_name = 'Номенклатура'
         verbose_name_plural = 'Номенклатура'
 

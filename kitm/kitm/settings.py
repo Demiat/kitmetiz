@@ -124,3 +124,10 @@ MEDIA_ROOT = BASE_DIR / 'smedia/'
 MEDIA_NOM = 'nomenclature/'
 
 EMAIL_HOST_USER = 'demiat@mail.ru'
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        'LOCATION': 'unique-snowflake',
+    },
+}

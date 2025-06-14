@@ -1,4 +1,5 @@
 {% load static %}
+{% load cache %}
 <script src="{% static 'js/bootstrap.bundle.min.js' %}" defer></script>
 <style>
   .nav-h {background-size: contain;}
@@ -72,4 +73,13 @@
       </div>
     {% endwith %}
   </div>
+  {% cache 2000 categories_cache %}
+    <div class="container px-3">
+      {% for category in categories %}
+        <a href="{% url 'welcome:index' category.slug %}" class="btn btn-secondary">
+          {{ category.name }}
+        </a>
+      {% endfor %}
+    </div>
+  {% endcache %}
 </header>
