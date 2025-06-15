@@ -64,7 +64,7 @@ class Nomenclature(models.Model):
         verbose_name='Категория',
         max_length=MAX_LENGTH_NAME
     )
-    on_home = models.BooleanField('На Главной', default=False)
+    on_home = models.BooleanField('На Главной', default=False, db_index=True)
     image = models.ImageField(
         'Изображение',
         upload_to=settings.MEDIA_NOM,
@@ -99,7 +99,8 @@ class Rating(models.Model):
         validators=[
             MinValueValidator(1),
             MaxValueValidator(5)
-        ]
+        ],
+        db_index=True
     )
 
     class Meta:
