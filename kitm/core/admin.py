@@ -128,7 +128,7 @@ class ReviewAdmin(admin.ModelAdmin):
 
 
 сustom_admin_site = CustomAdminSite(name='myadmin')
-CustomAdminSite.register(Review, ReviewAdmin)
+сustom_admin_site.register(Review, ReviewAdmin)
 сustom_admin_site.register(Category, CategoryAdmin)
 сustom_admin_site.register(Rating, RatingAdmin)
 сustom_admin_site.register(Nomenclature, NomenclatureAdmin)

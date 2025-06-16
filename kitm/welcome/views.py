@@ -14,10 +14,11 @@ class Welcome(ListView):
     paginate_by = PAGINATOR_LIMIT
 
     def get_queryset(self):
+        find = self.request.GET.get('find_nom')
         if self.kwargs.get('cat_slug'):
             filter_pars = {'category__slug': self.kwargs['cat_slug']}
-        elif (find := self.request.GET.get('find_nom')):
-            filter_pars = {'name__icontains': find}
+        elif find:
+            filter_pars = {'name__iregex': f'.*{find}.*'}
         else:
             filter_pars = {'on_home': True}
 
@@ -30,14 +31,16 @@ class Welcome(ListView):
         ).order_by('-avg_rating', 'name')
 
         if find:
-            queryset = queryset[:8]
+            return queryset
+            # return queryset[:PAGINATOR_LIMIT]
 
         return queryset
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         categories = cache.get('categories')
-        if categories is None:
+        if not categories:
+            # list побуждает ленивый кверисет отдать данные для кеша
             categories = list(Category.objects.all())
             cache.set('categories', categories, 2000)
         context['categories'] = categories

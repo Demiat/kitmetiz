@@ -1,4 +1,5 @@
 {% load static %}
+{% load cache %}
 {% load django_bootstrap5 %}
 <!DOCTYPE html>
 <html lang="ru">
@@ -22,7 +23,22 @@
   <body style="background-color:#f2f2f2;">
     {% include "includes/header.html" %}
     <main>
-      <div class="container py-5">
+      {% cache 2000 categories_cache %}
+      <div class="container">
+        {% for category in categories %}
+          <a href="{% url 'welcome:index' category.slug %}" class="btn btn-secondary">
+            {{ category.name }}
+          </a>
+        {% endfor %}
+      {% endcache %}
+      </div>
+      <div class="container py-3">
+        <form class="d-flex mt-3" role="search" action="{% url 'welcome:index' %}" method="GET">
+          <input name="find_nom" style="width: 40ch;" class="form-control me-2" type="search" placeholder="Поиск по номенклатуре" aria-label="Search">
+          <button class="btn btn-outline-success" type="submit">Найти</button>
+        </form>
+      </div>
+      <div class="container py-3">
         {% block content %}{% endblock %}
       </div>
     </main>
