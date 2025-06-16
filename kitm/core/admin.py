@@ -7,7 +7,7 @@ from django.utils.encoding import force_str
 from django.utils.safestring import mark_safe
 
 from .funcs import process_exchange_1C_from_file, load_nomenclature_images
-from .models import Nomenclature, Rating, Category
+from .models import Nomenclature, Rating, Category, Review
 
 DESERIALIZED_ERROR = 'Ошибка десериализации данных: {e}'
 
@@ -122,7 +122,13 @@ class CategoryAdmin(admin.ModelAdmin):
     list_display = ('name', 'slug')
 
 
+class ReviewAdmin(admin.ModelAdmin):
+
+    pass
+
+
 сustom_admin_site = CustomAdminSite(name='myadmin')
+CustomAdminSite.register(Review, ReviewAdmin)
 сustom_admin_site.register(Category, CategoryAdmin)
 сustom_admin_site.register(Rating, RatingAdmin)
 сustom_admin_site.register(Nomenclature, NomenclatureAdmin)

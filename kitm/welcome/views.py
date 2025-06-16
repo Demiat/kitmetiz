@@ -14,17 +14,25 @@ class Welcome(ListView):
     paginate_by = PAGINATOR_LIMIT
 
     def get_queryset(self):
-        if not self.kwargs.get('cat_slug'):
-            filter_pars = {'on_home': True}
-        else:
+        if self.kwargs.get('cat_slug'):
             filter_pars = {'category__slug': self.kwargs['cat_slug']}
-        return Nomenclature.objects.select_related(
+        elif (find := self.request.GET.get('find_nom')):
+            filter_pars = {'name__icontains': find}
+        else:
+            filter_pars = {'on_home': True}
+
+        queryset = Nomenclature.objects.select_related(
             'category'
         ).filter(
             **filter_pars
         ).annotate(
             avg_rating=Avg('ratings__rating')
-        ).order_by('-avg_rating')
+        ).order_by('-avg_rating', 'name')
+
+        if find:
+            queryset = queryset[:8]
+
+        return queryset
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

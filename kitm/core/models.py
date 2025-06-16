@@ -6,9 +6,11 @@ from users.models import User
 
 MAX_LENGTH_NAME = 50
 MAX_CHARFIELD = 256
+MAX_TEXT_LENGHT = 500
 MIN_CHARFIELD = 10
 MAX_SLUGFIELD = 64
 STRING_LIMITATION = 20
+TEXT_LIMITATION = 30
 
 
 class Category(models.Model):
@@ -40,6 +42,7 @@ class Nomenclature(models.Model):
     name = models.CharField(
         'Наименование',
         max_length=MAX_CHARFIELD,
+        db_index=True
     )
     UID = models.CharField(
         max_length=36,
@@ -48,7 +51,7 @@ class Nomenclature(models.Model):
         primary_key=True
     )
     quantity = models.PositiveSmallIntegerField('Количество')
-    text = models.TextField('Описание', max_length=MAX_CHARFIELD)
+    text = models.TextField('Описание', max_length=MAX_TEXT_LENGHT)
     price = models.PositiveIntegerField('Цена')
     article = models.CharField(
         'Артикул',
@@ -118,3 +121,31 @@ class Rating(models.Model):
 
     def __str__(self):
         return f'{self.nomenclature.name[:MAX_LENGTH_NAME]}: {self.rating}'
+
+
+class Review(models.Model):
+
+    author = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        verbose_name='Автор'
+    )
+
+    text = models.TextField('Описание', max_length=MAX_TEXT_LENGHT)
+    created_at = models.DateTimeField('Дата публикации', auto_now_add=True)
+
+    class Meta:
+        verbose_name = 'Отзыв'
+        verbose_name_plural = 'Отзывы'
+        default_related_name = '%(model_name)ss'
+        ordering = ('-created_at',)
+        db_table = 'review'
+        constraints = (
+            models.UniqueConstraint(
+                fields=('author', 'text'),
+                name='unique_review'
+            ),
+        )
+
+    def __str__(self):
+        return f'{self.author}: {self.text[:TEXT_LIMITATION]}'
