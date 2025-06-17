@@ -30,10 +30,6 @@ class Welcome(ListView):
             avg_rating=Avg('ratings__rating')
         ).order_by('-avg_rating', 'name')
 
-        if find:
-            return queryset
-            # return queryset[:PAGINATOR_LIMIT]
-
         return queryset
 
     def get_context_data(self, **kwargs):
