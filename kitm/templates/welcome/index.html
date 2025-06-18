@@ -3,16 +3,57 @@
   Сайт строительных товаров!
 {% endblock %}
 {% block content %}
-  <div class="container">
-    <div class="row row-cols-1 row-cols-md-4 g-4">
-      {% for nom_card in page_obj %}
-        <div class="col">
-          <article class="mb-5">
-            {% include "includes/nom_card.html" %}
-          </article>
-        </div>
-      {% endfor %}
+
+<div class="container">
+  {% for category in categories %}
+    <a href="?category={{ category.slug }}&{{ urlparams }}" class="btn btn-secondary">
+      {{ category.name }}
+    </a>
+  {% endfor %}
+</div>
+
+<div class="container py-3">
+  <form class="d-flex w-100 justify-content-between align-items-center" role="search" action="{% url 'welcome:index' %}" method="GET">
+    <!-- Поле поиска номенклатуры -->
+    <input name="find_nom" class="form-control flex-grow-1 me-2" type="search" placeholder="Поиск по номенклатуре" aria-label="Search" value="{{ request.GET.find_nom }}">
+    
+    <div class="d-flex col-auto">
+      <!-- Селектор сортировки по цене -->
+      <select name="sort_by_price" class="form-select form-select-sm me-2" aria-label="Цена">
+        <option {% if not request.GET.sort_by_price %}selected disabled{% endif %}>По цене</option>
+        <option value="asc" {% if request.GET.sort_by_price == 'asc' %}selected{% endif %}>Возрастание цены</option>
+        <option value="desc" {% if request.GET.sort_by_price == 'desc' %}selected{% endif %}>Убывание цены</option>
+      </select>
+      
+      <!-- Селектор сортировки по рейтингу -->
+      <select name="sort_by_rating" class="form-select form-select-sm me-2" aria-label="Рейтинг">
+        <option {% if not request.GET.sort_by_rating %}selected disabled{% endif %}>По рейтингу</option>
+        <option value="high_to_low" {% if request.GET.sort_by_rating == 'high_to_low' %}selected{% endif %}>От высшего к низшему</option>
+        <option value="low_to_high" {% if request.GET.sort_by_rating == 'low_to_high' %}selected{% endif %}>От низкого к высокому</option>
+      </select>
+      
+      <!-- Селектор сортировки по наименованию -->
+      <select name="sort_by_name" class="form-select form-select-sm me-2" aria-label="Название">
+        <option {% if not request.GET.sort_by_name %}selected disabled{% endif %}>По наименованию</option>
+        <option value="a-z" {% if request.GET.sort_by_name == 'a-z' %}selected{% endif %}>От А до Я</option>
+        <option value="z-a" {% if request.GET.sort_by_name == 'z-a' %}selected{% endif %}>От Я до А</option>
+      </select>
     </div>
+    
+    <button class="btn btn-outline-success" type="submit">Применить</button>
+  </form>
+</div>
+
+<div class="container">
+  <div class="row row-cols-1 row-cols-md-4 g-4">
+    {% for nom_card in page_obj %}
+      <div class="col">
+        <article class="mb-5">
+          {% include "includes/nom_card.html" %}
+        </article>
+      </div>
+    {% endfor %}
   </div>
+</div>
   {% include "includes/paginator.html" %}
 {% endblock %}
