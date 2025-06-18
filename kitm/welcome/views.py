@@ -14,13 +14,19 @@ class Welcome(ListView):
     paginate_by = PAGINATOR_LIMIT
 
     def get_queryset(self):
+        filter_pars = {}
+        ordering = []
+
         find = self.request.GET.get('find_nom')
-        if self.kwargs.get('cat_slug'):
-            filter_pars = {'category__slug': self.kwargs['cat_slug']}
-        elif find:
-            filter_pars = {'name__iregex': f'.*{find}.*'}
-        else:
-            filter_pars = {'on_home': True}
+        if self.request.GET.get('category'):
+            filter_pars['category__slug'] = self.request.GET['category']
+        if find:
+            filter_pars['name__iregex'] = f'.*{find}.*'
+        if (sort_price := self.request.GET.get('sort_by_price')):
+            ordering.append(('price' if sort_price == 'asc' else '-price'))
+
+        if not filter_pars:
+            filter_pars['on_home'] = True
 
         queryset = Nomenclature.objects.select_related(
             'category'
@@ -28,7 +34,7 @@ class Welcome(ListView):
             **filter_pars
         ).annotate(
             avg_rating=Avg('ratings__rating')
-        ).order_by('-avg_rating', 'name')
+        ).order_by(*ordering or ('-avg_rating', 'name'))
 
         return queryset
 

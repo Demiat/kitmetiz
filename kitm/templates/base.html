@@ -1,5 +1,4 @@
 {% load static %}
-{% load cache %}
 {% load django_bootstrap5 %}
 <!DOCTYPE html>
 <html lang="ru">
@@ -7,9 +6,6 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" href="{% static 'img/fav/favicon.ico' %}" type="image">
-    {% comment %} <link rel="apple-touch-icon" sizes="180x180" href="{% static 'img/fav/apple-touch-icon.png' %}">
-    <link rel="icon" type="image/png" sizes="32x32" href="{% static 'img/fav/favicon-32x32.png' %}">
-    <link rel="icon" type="image/png" sizes="16x16" href="{% static 'img/fav/favicon-16x16.png' %}"> {% endcomment %}
     <title>
       {% block title %}{% endblock %}
     </title>
@@ -23,24 +19,49 @@
   <body style="background-color:#f2f2f2;">
     {% include "includes/header.html" %}
     <main>
-      {% cache 2000 categories_cache %}
       <div class="container">
         {% for category in categories %}
-          <a href="{% url 'welcome:index' category.slug %}" class="btn btn-secondary">
+          <a href="?category={{ category.slug }}&{{ urlparams }}" class="btn btn-secondary">
             {{ category.name }}
           </a>
         {% endfor %}
-      {% endcache %}
       </div>
+      
       <div class="container py-3">
-        <form class="d-flex mt-3" role="search" action="{% url 'welcome:index' %}" method="GET">
+        <form class="d-flex align-items-center" role="search" action="{% url 'welcome:index' %}" method="GET">
+          <!-- Поле поиска номенклатуры -->
           <input name="find_nom" style="width: 40ch;" class="form-control me-2" type="search" placeholder="Поиск по номенклатуре" aria-label="Search">
-          <button class="btn btn-outline-success" type="submit">Найти</button>
+          
+          <!-- Селектор сортировки по цене -->
+          <select name="sort_by_price" class="form-select form-select-sm me-2" aria-label="Цена">
+            <option selected disabled>По цене</option>
+            <option value="asc">Возрастание цены</option>
+            <option value="desc">Убывание цены</option>
+          </select>
+          
+          <!-- Селектор сортировки по рейтингу -->
+          <select name="sort_by_rating" class="form-select form-select-sm me-2" aria-label="Рейтинг">
+            <option selected disabled>По рейтингу</option>
+            <option value="high_to_low">От высшего к низшему</option>
+            <option value="low_to_high">От низкого к высокому</option>
+          </select>
+          
+          <!-- Селектор сортировки по наименованию -->
+          <select name="sort_by_name" class="form-select form-select-sm me-2" aria-label="Название">
+            <option selected disabled>По наименованию</option>
+            <option value="a-z">От А до Я</option>
+            <option value="z-a">От Я до А</option>
+          </select>
+          
+          <button class="btn btn-outline-success" type="submit">Применить</button>
         </form>
       </div>
-      <div class="container py-3">
-        {% block content %}{% endblock %}
-      </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <div class="container py-3">
+      {% block content %}{% endblock %}
+    </div>
     </main>
     {% include "includes/footer.html" %}
   </body>
