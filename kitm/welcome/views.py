@@ -1,6 +1,4 @@
-from django.views.generic import ListView
 from django_filters.views import FilterView
-from django.db.models import Avg
 from django.core.cache import cache
 
 from core.models import Nomenclature, Category
@@ -16,6 +14,7 @@ class Welcome(FilterView):
     paginate_by = PAGINATOR_LIMIT
     filterset_class = NomenclatureFilter
 
+    # TODO убрать этот код после "переезда" на фильтр
     # def get_queryset(self):
     #     filter_pars = {}
     #     ordering = []
@@ -48,6 +47,17 @@ class Welcome(FilterView):
             # list побуждает ленивый кверисет отдать данные для кеша
             categories = list(Category.objects.all())
             cache.set('categories', categories, 2000)
+
         context['categories'] = categories
         context['filter'] = self.filterset
+
+        if self.request.GET.get('clear_category'):
+            current_get_params = self.request.GET.copy()
+            current_get_params.pop('category', None)
+            current_get_params.pop('clear_category', None)
+            self.request.GET = current_get_params
+
+        if self.request.GET.get('category'):
+            context['last_category'] = f'category={self.request.GET["category"]}'
+
         return context

@@ -7,6 +7,5 @@ def urlparams(request):
             )
         )
     }
-    if request.GET.get('category'):
-        params['last_category'] = f'category={request.GET["category"]}'
+
     return params

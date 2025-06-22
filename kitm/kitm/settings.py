@@ -29,7 +29,6 @@ INSTALLED_APPS = [
     'django_bootstrap5',
     'django_cleanup.apps.CleanupConfig',
     'django_apscheduler',
-    'django_filters',
     'users.apps.UsersConfig',
     'pages.apps.PagesConfig',
     'welcome.apps.WelcomeConfig',
